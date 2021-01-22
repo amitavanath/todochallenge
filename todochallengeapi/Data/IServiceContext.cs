@@ -7,5 +7,13 @@ namespace todochallengeapi.Data
     public interface IServiceContext
     {
         public Task<IEnumerable<ToDoListItem>> GetToDoListItems();
+
+        public Task<ToDoListItem> GetToDoListItem(int id);
+
+        public void AddToDoListItem(ToDoListItem item);
+
+        public void UpdateToDoItemStatus(ToDoListItem item);
+
+        public void DeleteToDoItem(ToDoListItem item);
     }
 }
