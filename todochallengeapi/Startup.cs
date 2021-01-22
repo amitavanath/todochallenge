@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Serialization;
 using todochallengeapi.Data;
 using todochallengeapi.Services;
 
@@ -29,8 +31,16 @@ namespace todochallengeapi
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(
+                setupAction => 
+                {
+                    setupAction.SerializerSettings.ContractResolver = 
+                        new CamelCasePropertyNamesContractResolver();
+                }
+            );
 
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            
             services.AddScoped<IToDoListRepository, ToDoListRepository>();
             services.AddScoped<IServiceContext, ServiceContext>();
 
