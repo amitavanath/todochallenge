@@ -10,7 +10,7 @@ namespace todochallengeapi.Data
 
         public Task<ToDoListItem> GetToDoListItem(int id);
 
-        public void AddToDoListItem(ToDoListItem item);
+        public Task<int> AddToDoListItemAsync(ToDoListItem item);
 
         public void UpdateToDoItemStatus(ToDoListItem item);
 

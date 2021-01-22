@@ -26,9 +26,9 @@ namespace todochallengeapi.Data
             return await GetToDoListItemFromFileAsync(id);
         }
 
-        public void AddToDoListItem(ToDoListItem item)
+        public async Task<int> AddToDoListItemAsync(ToDoListItem item)
         {
-            AddToDoListItemsToFileAsync(item);
+            return await AddToDoListItemsToFileAsync(item);
         }
 
         public void UpdateToDoItemStatus(ToDoListItem item)
@@ -62,7 +62,7 @@ namespace todochallengeapi.Data
             return toDoListItems.Find(item => item.Id == id);
         }
 
-        public async void AddToDoListItemsToFileAsync(ToDoListItem item)
+        public async Task<int> AddToDoListItemsToFileAsync(ToDoListItem item)
         {
              var jsonData = await File.ReadAllTextAsync("ToDoItems.json");
 
@@ -72,6 +72,8 @@ namespace todochallengeapi.Data
             toDoListItems.Add(item);
 
             await File.WriteAllTextAsync("ToDoItems.json", JsonConvert.SerializeObject(toDoListItems));
+
+            return item.Id;
 
         }
 

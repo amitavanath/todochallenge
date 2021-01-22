@@ -1,4 +1,5 @@
 using AutoMapper;
+using System.Collections.Generic;
 
 namespace todochallengeapi.Profiles
 {
@@ -13,6 +14,8 @@ namespace todochallengeapi.Profiles
             CreateMap<Entities.ToDoListItem, Models.ToDoItemUpdationDto>();
 
             CreateMap<Models.ToDoItemUpdationDto, Entities.ToDoListItem>();
+
+            CreateMap<List<Entities.ToDoListItem>, List<Models.ToDoItemListDto>>();
         }
     }
 }

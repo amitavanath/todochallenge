@@ -6,7 +6,7 @@ namespace todochallengeapi.Models
         public string Name { get; set; }
         public bool Status { get; set;}
 
-        // public TaskStatus Status { get; set;}
+     
     }
 
 }

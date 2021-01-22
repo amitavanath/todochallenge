@@ -23,9 +23,9 @@ namespace todochallengeapi.Services
             return await _context.GetToDoListItem(id);
         }
 
-        public void AddToDoItem(ToDoListItem item)
+        public async Task<int> AddToDoItemAsync(ToDoListItem item)
         {
-            _context.AddToDoListItem(item);
+            return await _context.AddToDoListItemAsync(item);
         }
 
         public void UpdateToDoItemStatus(ToDoListItem item)

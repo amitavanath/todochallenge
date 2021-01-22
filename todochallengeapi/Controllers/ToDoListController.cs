@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using todochallengeapi.Commands;
 using todochallengeapi.Entities;
 using todochallengeapi.Models;
+using todochallengeapi.Queries;
 using todochallengeapi.Services;
 
 namespace todochallengeapi.Controllers
@@ -16,44 +20,45 @@ namespace todochallengeapi.Controllers
 
         private readonly IMapper _mapper;
 
-        public ToDoListController(IToDoListRepository toDoListRepository, IMapper mapper)
+        private readonly IMediator _mediator;
+
+        public ToDoListController(IToDoListRepository toDoListRepository, IMapper mapper, IMediator mediator)
         {
             _todoListRepository = toDoListRepository;
             _mapper = mapper;
+            _mediator = mediator;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetToDoListItems()
         {
-            var todoListItems = await _todoListRepository.GetToDoListItemsAsync();
+            var query = new GetAllItemsQuery();
+            var result = await _mediator.Send(query);
 
-            return Ok(todoListItems);
+            return Ok(result);
+
         }
 
         [HttpGet("{id}", Name="GetToDoListItem")]
         public async Task<IActionResult> GetToDoListItem(int id)
         {
-            var todoListItem = await _todoListRepository.GetToDoListItemAsync(id);
+            var query = new GetToDoItemByIdQuery(id);
+            var result = await _mediator.Send(query);
 
-            if(todoListItem == null)
-            {
-                return NotFound();
-            }
+            return result != null ? Ok(result) : NotFound();
 
-            return Ok(_mapper.Map<ToDoItemListDto>(todoListItem));
+
         }
 
         [HttpPost]
-        public IActionResult CreateToDoListItem(ToDoItemCreationDto item)
+        public IActionResult CreateToDoListItem(CreateToDoItemCommand command)
         {
-            var todoItemEntity = _mapper.Map<Entities.ToDoListItem>(item);
-            _todoListRepository.AddToDoItem(todoItemEntity);
+            var result = _mediator.Send(command);
 
-            var todoItemToReturn = _mapper.Map<ToDoItemListDto>(todoItemEntity);
 
             return CreatedAtRoute("GetToDoListItem",
-                                    new {Id = todoItemToReturn.Id},
-                                    todoItemToReturn);
+                                    new {Id = result.Result},
+                                    result);
 
         }
 
@@ -81,16 +86,18 @@ namespace todochallengeapi.Controllers
 
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteToDoItem(int id)
+        public async Task<IActionResult> DeleteToDoItem([FromRoute]DeleteToDoItemCommand command)
         {
-            var item = await _todoListRepository.GetToDoListItemAsync(id);
-            
-            if( item == null)
-            {
-                return NotFound();
-            }
+            var result = await _mediator.Send(command);
 
-            _todoListRepository.DeleteToDoItem(item);
+            //var item = await _todoListRepository.GetToDoListItemAsync(id);
+            
+            //if( item == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //_todoListRepository.DeleteToDoItem(item);
 
             return NoContent();
         }
