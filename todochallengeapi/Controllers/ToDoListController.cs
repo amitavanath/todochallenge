@@ -62,45 +62,26 @@ namespace todochallengeapi.Controllers
 
         }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateToDoListItemStatus(int id, 
-                                    JsonPatchDocument<ToDoItemUpdationDto> updateItem)
-        {
-            var item = await _todoListRepository.GetToDoListItemAsync(id);
-            
-            if( item == null)
-            {
-                return NotFound();
-            }
-
-            var itemToUpdate = _mapper.Map<ToDoItemUpdationDto>(item);
-
-            updateItem.ApplyTo(itemToUpdate);
-
-            _mapper.Map(itemToUpdate, item);
-
-            _todoListRepository.UpdateToDoItemStatus(item);
-
-            return NoContent();
-        }
-
-
+        
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteToDoItem([FromRoute]DeleteToDoItemCommand command)
         {
             var result = await _mediator.Send(command);
 
-            //var item = await _todoListRepository.GetToDoListItemAsync(id);
-            
-            //if( item == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //_todoListRepository.DeleteToDoItem(item);
-
             return NoContent();
         }
+
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateToDoListItemStatus(int id, JsonPatchDocument<ToDoItemUpdationDto> item)
+        {
+            var result = await _mediator.Send(new UpdateToDoListItemStatusCommand { 
+                                                        Id = id, UpdateItem = item});
+        
+            return NoContent();
+        }
+
+
 
     }
 }
