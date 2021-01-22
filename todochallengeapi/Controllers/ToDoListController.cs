@@ -1,11 +1,9 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using todochallengeapi.Commands;
-using todochallengeapi.Entities;
 using todochallengeapi.Models;
 using todochallengeapi.Queries;
 using todochallengeapi.Services;
@@ -16,18 +14,12 @@ namespace todochallengeapi.Controllers
     [Route("api/todolist")]
     public class ToDoListController : ControllerBase
     {
-        private readonly IToDoListRepository _todoListRepository;
-
-        private readonly IMapper _mapper;
+        
 
         private readonly IMediator _mediator;
 
-        public ToDoListController(IToDoListRepository toDoListRepository, IMapper mapper, IMediator mediator)
-        {
-            _todoListRepository = toDoListRepository;
-            _mapper = mapper;
-            _mediator = mediator;
-        }
+        public ToDoListController(IMediator mediator) => _mediator = mediator
+            ?? throw new System.ArgumentNullException(nameof(mediator));
 
         [HttpGet]
         public async Task<IActionResult> GetToDoListItems()
