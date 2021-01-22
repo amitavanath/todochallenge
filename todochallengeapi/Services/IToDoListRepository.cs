@@ -6,6 +6,6 @@ namespace todochallengeapi.Services
 {
     public interface IToDoListRepository
     {
-        public Task<IEnumerable<ToDoListItem>> GetToDoListItems();
+        public Task<IEnumerable<ToDoListItem>> GetToDoListItemsAsync();
     }
 }

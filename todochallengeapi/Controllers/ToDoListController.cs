@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using todochallengeapi.Services;
 
@@ -15,9 +16,9 @@ namespace todochallengeapi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetToDoListItems()
+        public async Task<IActionResult> GetToDoListItems()
         {
-            var todoListItems = _todoListRepository.GetToDoListItems();
+            var todoListItems = await _todoListRepository.GetToDoListItemsAsync();
 
             return Ok(todoListItems);
         }

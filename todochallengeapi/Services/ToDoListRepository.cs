@@ -13,7 +13,7 @@ namespace todochallengeapi.Services
             ?? throw new System.ArgumentNullException(nameof(context));
 
 
-        public async Task<IEnumerable<ToDoListItem>> GetToDoListItems()
+        public async Task<IEnumerable<ToDoListItem>> GetToDoListItemsAsync()
         {
             return await _context.GetToDoListItems();
         }
