@@ -24,7 +24,7 @@ namespace todochallengeapi.Handlers
 
         public async Task<ToDoItemListDto> Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
         {
-            ToDoListItem item = new ToDoListItem { Id = Guid.NewGuid(), Name = request.Name, Status = request.Status };
+            ToDoListItem item = new ToDoListItem { Id = Guid.NewGuid(), Name = request.Name, Completed = request.Completed };
 
             var result = await _todoListRepository.AddToDoItemAsync(item);
 

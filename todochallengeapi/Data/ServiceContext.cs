@@ -90,7 +90,7 @@ namespace todochallengeapi.Data
             List<ToDoListItem> toDoListItems = new List<ToDoListItem>();
             toDoListItems = JsonConvert.DeserializeObject<List<ToDoListItem>>(jsonData);
 
-            toDoListItems.Find(item => item.Id == todoItem.Id).Status = todoItem.Status;
+            toDoListItems.Find(item => item.Id == todoItem.Id).Completed = todoItem.Completed;
 
             await File.WriteAllTextAsync("ToDoItems.json", JsonConvert.SerializeObject(toDoListItems));
 
