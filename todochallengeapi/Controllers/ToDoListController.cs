@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using todochallengeapi.Commands;
@@ -12,6 +13,7 @@ using todochallengeapi.Services;
 
 namespace todochallengeapi.Controllers
 {
+    [EnableCors("Policy")]
     [ApiController]
     [Route("api/todolist")]
     public class ToDoListController : ControllerBase
@@ -50,15 +52,22 @@ namespace todochallengeapi.Controllers
 
         }
 
+        
         [HttpPost]
         public IActionResult CreateToDoListItem(CreateToDoItemCommand command)
         {
             var result = _mediator.Send(command);
 
+            var item = new ToDoListItem();
+            item.Name = command.Name;
+            item.Id = command.Id;
+            item.Status = command.Status;
 
-            return CreatedAtRoute("GetToDoListItem",
-                                    new {Id = result.Result},
-                                    result);
+            return Ok(item);
+
+            //return CreatedAtRoute("GetToDoListItem",
+            //                        new { Id = result.Result },
+            //                        result);
 
         }
 
@@ -82,6 +91,12 @@ namespace todochallengeapi.Controllers
         }
 
 
+        [HttpOptions]
+        public IActionResult GetToDoOptions()
+        {
+            Response.Headers.Add("Allow", "GET,OPTIONS,POST,PATCH");
+            return Ok();
+        }
 
     }
 }
