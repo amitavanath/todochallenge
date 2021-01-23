@@ -1,6 +1,7 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Newtonsoft.Json;
 using System;
@@ -11,155 +12,210 @@ using System.Text;
 using System.Threading.Tasks;
 using todochallengeapi.Commands;
 using todochallengeapi.Controllers;
-using todochallengeapi.Data;
 using todochallengeapi.Entities;
-using todochallengeapi.Handlers;
 using todochallengeapi.Models;
-using todochallengeapi.Profiles;
 using todochallengeapi.Queries;
-using todochallengeapi.Services;
 using Xunit;
 
 namespace todochallengeapi.Tests
 {
     public class ToDoControllerTests
     {
-        private static IMapper _mapper;
-
-        public ToDoControllerTests()
-        {
-            if (_mapper == null)
-            {
-                var mappingConfig = new MapperConfiguration(mc =>
-                {
-                    mc.AddProfile(new ToDoItemProfile());
-                });
-                IMapper mapper = mappingConfig.CreateMapper();
-                _mapper = mapper;
-            }
-        }
-
         [Fact]
-        public async void GetToDoItemsHandler_IsVerifiable_ReturnsNotNullResult()
+        public async void GetToDoListItems_ReturnsValue()
         {
             //Arrange
-            var _serviceContextMock = new Mock<IServiceContext>();
-            _serviceContextMock.Setup(a => a.GetToDoListItemsAsync()).Returns(GetToDoListItemsFromFileAsync()).Verifiable();
-
-            //Act
-            IToDoListRepository _todoListRepository = new ToDoListRepository(_serviceContextMock.Object);
-
-            GetAllItemsHandler handler = new GetAllItemsHandler(_todoListRepository, _mapper);
+            var httpContext = new DefaultHttpContext();
 
             GetAllItemsQuery query = new GetAllItemsQuery();
-            
-            //Act
-            var result = await handler.Handle(query, new System.Threading.CancellationToken());
 
-            //Assert
-            Assert.NotNull(result);
-            Assert.Single(result);
+            var items = await GetToDoListItemsFromFileAsync();
+            
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<GetAllItemsQuery>(), new System.Threading.CancellationToken())).Returns(Task.FromResult(items));
+
+            var controller = new ToDoListController(mediator.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext,
+                }
+            };
+
+            //ACT 
+            var result = await controller.GetToDoListItems();
+            //var actualtResult = result;
+
+            //ASSERT
+            Assert.IsType<OkObjectResult>(result.Result);
+
         }
 
         [Fact]
-        public async void CreateItemsHandler_IsVerifiable_ReturnsNotNullResult()
+        public async void GetToDoListItems_NoResults_ReturnsOK()
         {
             //Arrange
-            var _serviceContextMock = new Mock<IServiceContext>();
-            _serviceContextMock.Setup(a => a.AddToDoListItemAsync(It.IsAny<ToDoListItem>())).Verifiable();
+            var httpContext = new DefaultHttpContext();
+
+            GetAllItemsQuery query = new GetAllItemsQuery();
+
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<GetAllItemsQuery>(), new System.Threading.CancellationToken()));
+
+            var controller = new ToDoListController(mediator.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext,
+                }
+            };
+
+            //ACT 
+            var result = await controller.GetToDoListItems();
+
+            //ASSERT
+            Assert.IsType<OkObjectResult>(result.Result);
+
+        }
+
+
+        [Fact]
+        public void CreateToDoListItem_ReturnsOKResult()
+        {
+            //Arrange
+            var httpContext = new DefaultHttpContext();
 
             CreateToDoItemCommand command = new CreateToDoItemCommand();
             command.Name = "Test";
             command.Completed = false;
 
-            IToDoListRepository _todoListRepository = new ToDoListRepository(_serviceContextMock.Object);
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<CreateToDoItemCommand>(), new System.Threading.CancellationToken()));
 
-            CreateToDoItemHandler handler = new CreateToDoItemHandler(_todoListRepository, _mapper);
+            var controller = new ToDoListController(mediator.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext,
+                }
+            };
 
-            //Act
-            var result = await handler.Handle(command, new System.Threading.CancellationToken());
+            //ACT 
+            var result = controller.CreateToDoListItem(command);
 
-            //Assert
-            Assert.IsType<Guid>(result.Id);
-            Assert.Matches(command.Name, result.Name);
-            Assert.Equal(command.Completed, result.Completed);
+            //ASSERT
+            Assert.IsType<ActionResult<ToDoItemListDto>>(result.Result);
+            Assert.Null(result.Result.Value);
 
-            
+        }
+
+        [Fact]
+        public async void CreateToDoListItem_ReturnsValidDto_ReturnsOKResult()
+        {
+            //Arrange
+            var httpContext = new DefaultHttpContext();
+
+            var items = await GetToDoListItemsFromFileAsync();
+
+            CreateToDoItemCommand command = new CreateToDoItemCommand();
+            command.Name = "Test";
+            command.Completed = false;
+
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<CreateToDoItemCommand>(), new System.Threading.CancellationToken()))
+                        .Returns(Task.FromResult(items.First()));
+
+            var controller = new ToDoListController(mediator.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext,
+                }
+            };
+
+            //ACT 
+            var result = await controller.CreateToDoListItem(command);
+
+            //ASSERT
+            Assert.IsType<OkObjectResult>(result.Result);
+            Assert.NotNull(result.Result);
+
         }
 
 
         [Fact]
-        public async void DeleteItemHandler_IsVerifiable_ReturnsNotNullResult()
+        public async void DeleteToDoListItem_ReturnsNoContentResult()
         {
-            var itemToDelete = new ToDoListItem { Id = Guid.Parse("7a73db1a-f0a8-4937-a229-b9787ea2c54f"), Completed = true, Name = "test" };
-
             //Arrange
-            var _serviceContextMock = new Mock<IServiceContext>();
-            _serviceContextMock.Setup(a => a.DeleteToDoItem(It.IsAny<ToDoListItem>())).Verifiable();
-            _serviceContextMock.Setup(a => a.GetToDoListItemAsync(itemToDelete.Id)).Verifiable();
+            var httpContext = new DefaultHttpContext();
 
             DeleteToDoItemCommand command = new DeleteToDoItemCommand();
-            command.Id = Guid.NewGuid();
 
-            IToDoListRepository _todoListRepository = new ToDoListRepository(_serviceContextMock.Object);
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<DeleteToDoItemCommand>(), new System.Threading.CancellationToken()));
 
-            DeleteToDoItemHandler handler = new DeleteToDoItemHandler(_todoListRepository, _mapper);
+            var controller = new ToDoListController(mediator.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext,
+                }
+            };
 
-            //Act
-            var _handler = await handler.Handle(command, new System.Threading.CancellationToken());
+            //ACT 
+            var result = await controller.DeleteToDoItem(command);
 
-            //Assert
-            Assert.NotNull(handler);
+            //ASSERT
+            Assert.IsType<NoContentResult>(result);
+
         }
 
 
         [Fact]
-        public async void UpdateToDoItemHandler_IsVerifiable_ReturnsNotNullResult()
+        public async void UpdateToDoListItemStatus_ReturnsNoContentResult()
         {
             //Arrange
             var itemToUpdate = new ToDoListItem { Id = Guid.Parse("7a73db1a-f0a8-4937-a229-b9787ea2c54f"), Completed = true, Name = "test" };
 
-            var _serviceContextMock = new Mock<IServiceContext>();
-            _serviceContextMock.Setup(a => a.UpdateToDoItemStatus(itemToUpdate)).Verifiable();
-            _serviceContextMock.Setup(a => a.GetToDoListItemAsync(itemToUpdate.Id)).Returns(GetToDoListItemFromFileAsync(itemToUpdate.Id)).Verifiable();
+            var httpContext = new DefaultHttpContext();
+
+            var items = await GetToDoListItemsFromFileAsync();
 
             JsonPatchDocument<ToDoItemUpdationDto> patch = new JsonPatchDocument<ToDoItemUpdationDto>();
             patch.Replace(e => e.Completed, !itemToUpdate.Completed);
 
-            var command = new UpdateToDoListItemStatusCommand();
+            UpdateToDoListItemStatusCommand command = new UpdateToDoListItemStatusCommand();
             command.Id = itemToUpdate.Id;
             command.UpdateItem = patch;
 
-            IToDoListRepository _todoListRepository = new ToDoListRepository(_serviceContextMock.Object);
-            UpdateToDoListItemStatusHandler handler = new UpdateToDoListItemStatusHandler(_todoListRepository, _mapper);
+            var mediator = new Mock<IMediator>();
+            mediator.Setup(m => m.Send(It.IsAny<UpdateToDoListItemStatusCommand>(), new System.Threading.CancellationToken()));
 
-            //Act
-            var _handler = await handler.Handle(command, new System.Threading.CancellationToken());
+            var controller = new ToDoListController(mediator.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = httpContext,
+                }
+            };
 
-            //Assert - verify able to call UpdateToDoListItemStatusHandler
-            Assert.NotNull(handler);
+            //ACT 
+            var result = await controller.UpdateToDoListItemStatus(command.Id, command.UpdateItem);
+
+            //ASSERT
+            Assert.IsType<NoContentResult>(result);
+
         }
 
-        public async Task<IEnumerable<ToDoListItem>> GetToDoListItemsFromFileAsync()
+        public async Task<IEnumerable<ToDoItemListDto>> GetToDoListItemsFromFileAsync()
         {
             var jsonData = await File.ReadAllTextAsync("ToDoItems.json");
 
-            List<ToDoListItem> toDoListItems = new List<ToDoListItem>();
-            toDoListItems = JsonConvert.DeserializeObject<List<ToDoListItem>>(jsonData);
+            List<ToDoItemListDto> toDoListItems = new List<ToDoItemListDto>();
+            toDoListItems = JsonConvert.DeserializeObject<List<ToDoItemListDto>>(jsonData);
 
             return toDoListItems;
         }
-
-        public async Task<ToDoListItem> GetToDoListItemFromFileAsync(Guid id)
-        {
-            var jsonData = await File.ReadAllTextAsync("ToDoItems.json");
-
-            List<ToDoListItem> toDoListItems = new List<ToDoListItem>();
-            toDoListItems = JsonConvert.DeserializeObject<List<ToDoListItem>>(jsonData);
-
-            return toDoListItems.Find(item => item.Id == id);
-        }
-
-
     }
+
 }

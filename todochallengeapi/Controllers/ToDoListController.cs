@@ -27,7 +27,7 @@ namespace todochallengeapi.Controllers
             ?? throw new System.ArgumentNullException(nameof(mediator));
 
         [HttpGet]
-        public async Task<IActionResult> GetToDoListItems()
+        public async Task<ActionResult<IEnumerable<ToDoItemListDto>>> GetToDoListItems()
         {
             var query = new GetAllItemsQuery();
             var result = await _mediator.Send(query);
