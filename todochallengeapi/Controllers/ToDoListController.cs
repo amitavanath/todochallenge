@@ -47,9 +47,9 @@ namespace todochallengeapi.Controllers
 
         
         [HttpPost]
-        public IActionResult CreateToDoListItem(CreateToDoItemCommand command)
+        public async Task<IActionResult> CreateToDoListItem(CreateToDoItemCommand command)
         {
-            var result = _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
             //var item = new ToDoListItem();
             //item.Name = command.Name;
