@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using todochallengeapi.Commands;
@@ -8,7 +9,7 @@ using todochallengeapi.Services;
 
 namespace todochallengeapi.Handlers
 {
-    public class CreateToDoItemHandler : IRequestHandler<CreateToDoItemCommand, int>
+    public class CreateToDoItemHandler : IRequestHandler<CreateToDoItemCommand, ToDoListItem>
     {
 
         private readonly IToDoListRepository _todoListRepository;
@@ -20,13 +21,13 @@ namespace todochallengeapi.Handlers
             _mapper = mapper;
         }
 
-        public async Task<int> Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
+        public async Task<ToDoListItem> Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
         {
-            ToDoListItem item = new ToDoListItem { Id = request.Id, Name = request.Name, Status = request.Status };
+            ToDoListItem item = new ToDoListItem { Id = Guid.NewGuid(), Name = request.Name, Status = request.Status };
 
             var result = await _todoListRepository.AddToDoItemAsync(item);
 
-            return result;
+            return item;
 
      
         }

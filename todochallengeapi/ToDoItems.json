@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-[{"Id":1,"Name":"First Item","Status":true},{"Id":3,"Name":"Fourth Item","Status":false},{"Id":4,"Name":"Fourth Item","Status":false},{"Id":5,"Name":"Fifth Item","Status":false},{"Id":5,"Name":"Fifth Item","Status":true},{"Id":500,"Name":"Fifth Item","Status":true},{"Id":200,"Name":"first from web","Status":true},{"Id":200,"Name":"second from web","Status":true},{"Id":200,"Name":"as","Status":true},{"Id":200,"Name":"another","Status":true},{"Id":500,"Name":"Fifth Item","Status":true},{"Id":200,"Name":"a1","Status":true},{"Id":200,"Name":"a1","Status":true},{"Id":200,"Name":"first from web","Status":true},{"Id":200,"Name":"as","Status":true},{"Id":200,"Name":"first","Status":true}]
-=======
-[{"Id":1,"Name":"First Item","Status":true},{"Id":3,"Name":"Fourth Item","Status":false},{"Id":4,"Name":"Fourth Item","Status":false},{"Id":5,"Name":"Fifth Item","Status":false},{"Id":100,"Name":"Second Item","Status":true}]
->>>>>>> b1d16cc2d2bd08bf6345135281ea9f6284671c1c
+[{"Id":"6dd1b8e4-aa86-4a89-ba58-2f8d2f1c1ac1","Name":"First guid Item","Status":true},{"Id":"a1362495-47da-4369-8400-56858f41b74a","Name":"second guid Item","Status":true}]

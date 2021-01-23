@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using todochallengeapi.Data;
@@ -18,12 +19,12 @@ namespace todochallengeapi.Services
             return await _context.GetToDoListItems();
         }
 
-        public async Task<ToDoListItem> GetToDoListItemAsync(int id)
+        public async Task<ToDoListItem> GetToDoListItemAsync(Guid id)
         {
             return await _context.GetToDoListItem(id);
         }
 
-        public async Task<int> AddToDoItemAsync(ToDoListItem item)
+        public async Task<ToDoListItem> AddToDoItemAsync(ToDoListItem item)
         {
             return await _context.AddToDoListItemAsync(item);
         }

@@ -10,9 +10,9 @@ namespace todochallengeapi.Queries
     
     public class GetToDoItemByIdQuery : IRequest<ToDoItemListDto>
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public GetToDoItemByIdQuery(int id)
+        public GetToDoItemByIdQuery(Guid id)
         {
             Id = id;
         }

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -34,7 +35,7 @@ namespace todochallengeapi.Controllers
         }
 
         [HttpGet("{id}", Name="GetToDoListItem")]
-        public async Task<IActionResult> GetToDoListItem(int id)
+        public async Task<IActionResult> GetToDoListItem(Guid id)
         {
             var query = new GetToDoItemByIdQuery(id);
             var result = await _mediator.Send(query);
@@ -50,12 +51,12 @@ namespace todochallengeapi.Controllers
         {
             var result = _mediator.Send(command);
 
-            var item = new ToDoListItem();
-            item.Name = command.Name;
-            item.Id = command.Id;
-            item.Status = command.Status;
+            //var item = new ToDoListItem();
+            //item.Name = command.Name;
+            //item.Id = command.Id;
+            //item.Status = command.Status;
 
-            return Ok(item);
+            return Ok(result);
 
             //return CreatedAtRoute("GetToDoListItem",
             //                        new { Id = result.Result },
@@ -74,7 +75,7 @@ namespace todochallengeapi.Controllers
 
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateToDoListItemStatus(int id, JsonPatchDocument<ToDoItemUpdationDto> item)
+        public async Task<IActionResult> UpdateToDoListItemStatus(Guid id, JsonPatchDocument<ToDoItemUpdationDto> item)
         {
             var result = await _mediator.Send(new UpdateToDoListItemStatusCommand { 
                                                         Id = id, UpdateItem = item});

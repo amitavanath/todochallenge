@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
@@ -21,12 +22,12 @@ namespace todochallengeapi.Data
             return await GetToDoListItemsFromFileAsync();
         }
 
-        public async Task<ToDoListItem> GetToDoListItem(int id)
+        public async Task<ToDoListItem> GetToDoListItem(Guid id)
         {
             return await GetToDoListItemFromFileAsync(id);
         }
 
-        public async Task<int> AddToDoListItemAsync(ToDoListItem item)
+        public async Task<ToDoListItem> AddToDoListItemAsync(ToDoListItem item)
         {
             return await AddToDoListItemsToFileAsync(item);
         }
@@ -52,7 +53,7 @@ namespace todochallengeapi.Data
             return toDoListItems;
         }
 
-        public async Task<ToDoListItem> GetToDoListItemFromFileAsync(int id)
+        public async Task<ToDoListItem> GetToDoListItemFromFileAsync(Guid id)
         {
              var jsonData = await File.ReadAllTextAsync("ToDoItems.json");
 
@@ -62,18 +63,22 @@ namespace todochallengeapi.Data
             return toDoListItems.Find(item => item.Id == id);
         }
 
-        public async Task<int> AddToDoListItemsToFileAsync(ToDoListItem item)
+        public async Task<ToDoListItem> AddToDoListItemsToFileAsync(ToDoListItem item)
         {
              var jsonData = await File.ReadAllTextAsync("ToDoItems.json");
 
             List<ToDoListItem> toDoListItems = new List<ToDoListItem>();
-            toDoListItems = JsonConvert.DeserializeObject<List<ToDoListItem>>(jsonData);
+
+            if(jsonData != string.Empty)
+            {
+                toDoListItems = JsonConvert.DeserializeObject<List<ToDoListItem>>(jsonData);
+            }
 
             toDoListItems.Add(item);
-
+            
             await File.WriteAllTextAsync("ToDoItems.json", JsonConvert.SerializeObject(toDoListItems));
 
-            return item.Id;
+            return item;
 
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using todochallengeapi.Entities;
@@ -8,9 +9,9 @@ namespace todochallengeapi.Data
     {
         public Task<IEnumerable<ToDoListItem>> GetToDoListItems();
 
-        public Task<ToDoListItem> GetToDoListItem(int id);
+        public Task<ToDoListItem> GetToDoListItem(Guid id);
 
-        public Task<int> AddToDoListItemAsync(ToDoListItem item);
+        public Task<ToDoListItem> AddToDoListItemAsync(ToDoListItem item);
 
         public void UpdateToDoItemStatus(ToDoListItem item);
 
