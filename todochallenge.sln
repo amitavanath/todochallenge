@@ -1,11 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todochallengeapi", "todochallengeapi\todochallengeapi.csproj", "{5187B73A-84B8-459B-B11F-66BBBA955C65}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todochallengeapi", "todochallengeapi\todochallengeapi.csproj", "{5187B73A-84B8-459B-B11F-66BBBA955C65}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "todochallengeapi.Tests", "todochallengeapi.Tests\todochallengeapi.Tests.csproj", "{DEAD8C64-08C7-4D66-B8B2-294748B54031}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "todochallengeapi.Tests", "todochallengeapi.Tests\todochallengeapi.Tests.csproj", "{DEAD8C64-08C7-4D66-B8B2-294748B54031}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{964C5FE3-5861-4683-845B-612D8CCA51D3}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +20,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{5187B73A-84B8-459B-B11F-66BBBA955C65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -44,5 +46,11 @@ Global
 		{DEAD8C64-08C7-4D66-B8B2-294748B54031}.Release|x64.Build.0 = Release|Any CPU
 		{DEAD8C64-08C7-4D66-B8B2-294748B54031}.Release|x86.ActiveCfg = Release|Any CPU
 		{DEAD8C64-08C7-4D66-B8B2-294748B54031}.Release|x86.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5B6FD9D9-8BC7-446F-85EB-00774C87C018}
 	EndGlobalSection
 EndGlobal

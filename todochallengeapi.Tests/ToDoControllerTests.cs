@@ -44,7 +44,6 @@ namespace todochallengeapi.Tests
 
             //ACT 
             var result = await controller.GetToDoListItems();
-            //var actualtResult = result;
 
             //ASSERT
             Assert.IsType<OkObjectResult>(result.Result);
