@@ -5,11 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using todochallengeapi.Commands;
 using todochallengeapi.Entities;
+using todochallengeapi.Models;
 using todochallengeapi.Services;
 
 namespace todochallengeapi.Handlers
 {
-    public class CreateToDoItemHandler : IRequestHandler<CreateToDoItemCommand, ToDoListItem>
+    public class CreateToDoItemHandler : IRequestHandler<CreateToDoItemCommand, ToDoItemListDto>
     {
 
         private readonly IToDoListRepository _todoListRepository;
@@ -21,15 +22,15 @@ namespace todochallengeapi.Handlers
             _mapper = mapper;
         }
 
-        public async Task<ToDoListItem> Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
+        public async Task<ToDoItemListDto> Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
         {
             ToDoListItem item = new ToDoListItem { Id = Guid.NewGuid(), Name = request.Name, Status = request.Status };
 
             var result = await _todoListRepository.AddToDoItemAsync(item);
 
-            return item;
+            return _mapper.Map<ToDoListItem, ToDoItemListDto>(item);
 
-     
+
         }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
@@ -35,7 +37,7 @@ namespace todochallengeapi.Controllers
         }
 
         [HttpGet("{id}", Name="GetToDoListItem")]
-        public async Task<IActionResult> GetToDoListItem(Guid id)
+        public async Task<ActionResult<IEnumerable<ToDoItemListDto>>> GetToDoListItem(Guid id)
         {
             var query = new GetToDoItemByIdQuery(id);
             var result = await _mediator.Send(query);
@@ -47,21 +49,11 @@ namespace todochallengeapi.Controllers
 
         
         [HttpPost]
-        public async Task<IActionResult> CreateToDoListItem(CreateToDoItemCommand command)
+        public async Task<ActionResult<ToDoItemListDto>> CreateToDoListItem(CreateToDoItemCommand command)
         {
             var result = await _mediator.Send(command);
 
-            //var item = new ToDoListItem();
-            //item.Name = command.Name;
-            //item.Id = command.Id;
-            //item.Status = command.Status;
-
             return Ok(result);
-
-            //return CreatedAtRoute("GetToDoListItem",
-            //                        new { Id = result.Result },
-            //                        result);
-
         }
 
         
