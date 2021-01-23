@@ -16,12 +16,12 @@ namespace todochallengeapi.Services
 
         public async Task<IEnumerable<ToDoListItem>> GetToDoListItemsAsync()
         {
-            return await _context.GetToDoListItems();
+            return await _context.GetToDoListItemsAsync();
         }
 
         public async Task<ToDoListItem> GetToDoListItemAsync(Guid id)
         {
-            return await _context.GetToDoListItem(id);
+            return await _context.GetToDoListItemAsync(id);
         }
 
         public async Task<ToDoListItem> AddToDoItemAsync(ToDoListItem item)

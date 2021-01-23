@@ -17,12 +17,12 @@ namespace todochallengeapi.Data
             _config = config;
         }
 
-        public async Task<IEnumerable<ToDoListItem>> GetToDoListItems()
+        public async Task<IEnumerable<ToDoListItem>> GetToDoListItemsAsync()
         {
             return await GetToDoListItemsFromFileAsync();
         }
 
-        public async Task<ToDoListItem> GetToDoListItem(Guid id)
+        public async Task<ToDoListItem> GetToDoListItemAsync(Guid id)
         {
             return await GetToDoListItemFromFileAsync(id);
         }
