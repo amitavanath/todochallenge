@@ -39,6 +39,8 @@ ToDO Application APIs which support the following endpoints:
 
 ### Built With
 
-Built using .Net Core 5 WebAPI, C# and the WebAPI is deployed to Azure WebAPP.
+Built using .Net 5 WebAPI, C# and the WebAPI is deployed to Azure WebAPP.
 
 WebApp url: https://todochallengeapi.azurewebsites.net/api/todolist
+
+Run the application locally using "dotnet run" command.
