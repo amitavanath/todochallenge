@@ -9,8 +9,6 @@ namespace todochallengeapi.Profiles
         {
             CreateMap<Entities.ToDoListItem, Models.ToDoItemListDto>();
 
-            CreateMap<Models.ToDoItemCreationDto, Entities.ToDoListItem>();
-
             CreateMap<Entities.ToDoListItem, Models.ToDoItemUpdationDto>();
 
             CreateMap<Models.ToDoItemUpdationDto, Entities.ToDoListItem>();
