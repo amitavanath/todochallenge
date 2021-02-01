@@ -44,3 +44,9 @@ Built using .Net 5 WebAPI, C# and the WebAPI is deployed to Azure WebAPP.
 WebApp url: https://todochallengeapi.azurewebsites.net/api/todolist
 
 Run the application locally using "dotnet run" command.
+
+Corresponding frontend built using ReactJS is hosted at below url:
+https://todoappreactjs.azurewebsites.net
+
+And, the git repo for the ReactJS application is as below:
+https://github.com/amitavanath/todochallenge
